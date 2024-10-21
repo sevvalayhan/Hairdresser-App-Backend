@@ -2,6 +2,7 @@ from django.contrib import admin
 from . import models
 
 admin.site.register(models.Barber)
+admin.site.register(models.Category)
 admin.site.register(models.Service)
 admin.site.register(models.ServiceImage)
 admin.site.register(models.ServiceComment)

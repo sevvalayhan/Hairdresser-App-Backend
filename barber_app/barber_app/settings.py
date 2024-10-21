@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'users',
     'barber',
     'generals',
+    'appointments',
     'rest_framework'
 ]
 
