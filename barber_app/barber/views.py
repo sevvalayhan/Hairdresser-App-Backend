@@ -15,11 +15,7 @@ from django.contrib.auth.models import User
 class ServiceListView(generics.ListAPIView):
     queryset = models.Service.objects.all()
     serializer_class =serializers.ServiceSerializer
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        serialized_data = serializers.ServiceSerializer(queryset, many=True).data
-        print(serialized_data)  # JSON formatında serileştirilmiş veriyi yazdırır
-        return queryset
+
 class ServiceCommentListView(generics.ListAPIView):
     queryset = models.ServiceComment.objects.all()
     serializer_class =serializers.ServiceCommentSerializer
