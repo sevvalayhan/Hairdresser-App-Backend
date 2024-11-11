@@ -1,9 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 
 class Adress(models.Model):    
-    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="addresses")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="addresses")
     address_type= models.SmallIntegerField()
     building_no=models.CharField(max_length=10,blank=True,null=True)
     street = models.CharField(max_length=255,blank=True,null=True)

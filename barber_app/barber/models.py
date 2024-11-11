@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class Barber(models.Model):
-    user= models.OneToOneField(User,on_delete=models.CASCADE,related_name="barber")
+    user= models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="barber")
     identity_number= models.CharField(max_length=11,)
     first_name= models.CharField(max_length=255)
     last_name=models.CharField(max_length=255)
@@ -32,23 +32,21 @@ class Category(models.Model):
     def __str__(self):
         return f"Category: {self.category_name}"
 
+from datetime import timedelta
+
 class Service(models.Model):
-    barber = models.ForeignKey(Barber, on_delete=models.CASCADE, related_name="services")
-    category = models.ForeignKey(
-        Category,
-        related_name='services',
-        default=get_default_category,  # Reference the function here
-        on_delete=models.SET_DEFAULT
-    )
-    price = models.DecimalField(decimal_places=2, max_digits=8)
+    barber = models.ForeignKey("barber.Barber", on_delete=models.CASCADE, related_name="services")
+    title = models.CharField(max_length=255,default="Genel")
     description = models.TextField(max_length=500, blank=True, null=True)
-    duration = models.DurationField()
+    duration = models.IntegerField(help_text="Duration of the service, in minutes.")  # Store duration in timedelta
+    price = models.DecimalField(decimal_places=2, max_digits=8)
 
     def __str__(self):
-        return f"Service: {self.category.category_name}"
-   
+        return f"Service: {self.title}"
+
+
 class ServiceComment(models.Model):
-   user= models.ForeignKey(User,on_delete=models.CASCADE,related_name="service_comments")
+   user= models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="service_comments")
    service= models.ForeignKey(Service,on_delete=models.CASCADE,related_name="service_comments")
    comment_text = models.TextField(max_length=500)
    comment_at = models.DateTimeField(auto_now=True) 
@@ -57,7 +55,7 @@ class ServiceComment(models.Model):
       return f"{self.user} : {self.comment_text} "
    
 class ServiceLike(models.Model):
-   user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="service_likes")
+   user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name="service_likes")
    service= models.ForeignKey(Service,on_delete=models.CASCADE,related_name="service_likes")
    liked_at = models.DateTimeField(auto_now=True) 
 
@@ -104,7 +102,7 @@ class PostMedia(models.Model):
 class PostLike(models.Model):
      
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_likes')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_likes')    
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='post_likes')    
     liked_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -112,7 +110,7 @@ class PostLike(models.Model):
 
 class PostComment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comments')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_comments')    
+    user = models.ForeignKey (settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='post_comments')    
     commented_at = models.DateTimeField(auto_now_add=True)
     content = models.TextField(max_length=500)
     crated_at = models.DateTimeField(auto_now_add=True)

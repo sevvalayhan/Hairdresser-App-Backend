@@ -22,5 +22,4 @@ urlpatterns = [
     path('customer/',include('customer.urls',)),
     path('generals/',include('generals.urls',)),
     path('barber/',include('barber.urls',)),
-    
 ]
