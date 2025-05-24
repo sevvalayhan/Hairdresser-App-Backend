@@ -4,18 +4,40 @@ from rest_framework import generics
 from . import models
 from . import serializers
 from . import serializers
-from django.contrib.auth.models import User
+from rest_framework import status 
 
-# class ServiceCommentListView(APIView):
-#     def get(self, request, *args, **kwargs):
-#         your_model_data = models.Service.objects.get(id=1).service_comments
-#         serializer = serializers.ServiceCommentSerializer(your_model_data, many=True)  
-#         return Response(serializer.data) 
+class ServiceListView(APIView):
+    def post(self, request, *args, **kwargs):
+        search_query = request.data.get('search', None)
+        if search_query:
+            services = models.Service.objects.filter(includes__icontains=search_query) 
+        else:
+            services = None
+        serializer =serializers.ServiceSerializer(services, many=True,context={'request': request})        
+        return Response(serializer.data, status=status.HTTP_200_OK)   
+       
+    def get(self, request, *args, **kwargs):
+        services = models.Service.objects.all()
+        serializer = serializers.ServiceSerializer(services, many=True, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-class ServiceListView(generics.ListAPIView):
-    queryset = models.Service.objects.all()
-    serializer_class =serializers.ServiceSerializer
 
+class BarberListView(APIView):
+    def post(self, request, *args, **kwargs):
+        search_query = request.data.get('search', None)
+        if search_query:
+            barbers = models.Barber.objects.filter(includes__icontains=search_query) 
+        else:
+            barbers = None
+        serializer =serializers.BarberSerializer(barbers, many=True,context={'request': request})        
+        return Response(serializer.data, status=status.HTTP_200_OK)   
+    def get(self,request, *args, **kwargs):
+        barbers = models.Barber.objects.all()
+        serializer = serializers.BarberSerializer(barbers,many=True,context={'request': request})
+        return Response(serializer.data, status = status.HTTP_200_OK)
+    
+
+       
 class ServiceCommentListView(generics.ListAPIView):
     queryset = models.ServiceComment.objects.all()
     serializer_class =serializers.ServiceCommentSerializer
@@ -28,13 +50,26 @@ class ServiceImageListView(generics.ListAPIView):
     queryset = models.ServiceImage.objects.all()
     serializer_class =serializers.ServiceImageSerializer
 
-class BarberListView(generics.ListAPIView):
-    queryset = models.Barber.objects.all()
-    serializer_class =serializers.BarberSerializer
-
-class PostListView(generics.ListAPIView):
-    queryset = models.Post.objects.all()
-    serializer_class =serializers.PostSerializer
+class PostListView(APIView):      
+    def post(self, request, *args, **kwargs): 
+        posts = models.Post.objects.all()  
+        serializer =serializers.PostSerializer(posts, many=True,context={'request': request})        
+        return Response(serializer.data, status=status.HTTP_200_OK)   
+    def get(self,request, *args, **kwargs):
+        posts = models.Post.objects.all()
+        serializer = serializers.PostSerializer(posts,many=True,context={'request': request})
+        return Response(serializer.data, status = status.HTTP_200_OK)
+    
+class PostMediaListView(APIView):      
+    def post(self, request, *args, **kwargs): 
+        postMedias = models.PostMedia.objects.all()  
+        serializer =serializers.PostMediaSerializer(postMedias, many=True,context={'request': request})        
+        return Response(serializer.data, status=status.HTTP_200_OK)   
+    def get(self,request, *args, **kwargs):
+        postMedias = models.PostMedia.objects.all()
+        serializer = serializers.PostMediaSerializer(postMedias,many=True,context={'request': request})
+        return Response(serializer.data, status = status.HTTP_200_OK)
+    
 
 class PostCommentListView(generics.ListAPIView):
     queryset = models.PostComment.objects.all()

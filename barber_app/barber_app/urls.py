@@ -1,6 +1,5 @@
 """
 URL configuration for barber_app project.
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
 Examples:
@@ -16,10 +15,25 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from django.conf import settings
+from django.conf.urls.static import static 
+from rest_framework_simplejwt.views import   TokenRefreshView
+from users.views import MyTokenObtainPairView,UserRegistrationView
+from dj_rest_auth.registration.views import VerifyEmailView
+ 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('customer/',include('customer.urls',)),
     path('generals/',include('generals.urls',)),
-    path('barber/',include('barber.urls',)),
+    path('barber/',include('barber.urls',)),  
+    path('users/',include('users.urls',)),  
+
+    path('dj-rest-auth/', include('dj_rest_auth.urls')), 
+    path('auth/confirm-email/', VerifyEmailView.as_view(),name='verify_email'), 
+    
+    path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,13 +1,22 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+ 
+from rest_framework import generics
 from . import models
 from . import serializers
-from django.contrib.auth.models import User
 
-class AddressListView(APIView):
-    def get(self, request, *args, **kwargs):
-        user = User.objects.get(id=1)
-        #your_model_data = models.Adress.objects.filter(user=User.objects.get(id=1)) 
-        your_model_data = user.addresses 
-        serializer = serializers.AddressSerializer(your_model_data, many=True)  
-        return Response(serializer.data)  
+class AddressListView(generics.ListAPIView):
+   queryset = models.Adress.objects.all()
+   serializer_class = serializers.AddressSerializer
+
+class CountryListView(generics.ListAPIView):
+   queryset = models.Country.objects.all()
+   serializer_class = serializers.CountrySerializer
+
+class ProvinceListView(generics.ListAPIView):
+   queryset = models.Province.objects.all()
+   serializer_class = serializers.ProvinceSerializer
+class DistrictListView(generics.ListAPIView):
+   queryset = models.District.objects.all()
+   serializer_class = serializers.DistrictSerializer 
+class PhoneNumberListView(generics.ListAPIView):
+   queryset = models.PhoneNumber.objects.all()
+   serializer_class = serializers.PhoneNumberSerializer 

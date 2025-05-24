@@ -4,12 +4,15 @@ from .models import Barber, Category, Service, ServiceComment, ServiceLike, Serv
 class BarberForm(forms.ModelForm):
     class Meta:
         model = Barber
-        fields = ['user', 'identity_number', 'first_name', 'last_name', 'bio', 'email', 'profile_image', 'identity_card', 'status', 'is_improved']
-
+        fields = ['user', 'identity_number', 'first_name', 'last_name', 'bio', 'email', 'profile_image', 'identity_card', 'status', 'is_improved','categories']
+    widgets = {
+            'categories': forms.CheckboxSelectMultiple(),  # Checkbox widget kullanımı
+        }
+  
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['category_name', 'description', 'category_image']
+        fields = '__all__'
 
 class ServiceForm(forms.ModelForm):
     class Meta:

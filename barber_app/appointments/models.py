@@ -8,8 +8,7 @@ class AppointmentDetail(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField(blank=True, null=True,)
 
-    def save(self, *args, **kwargs):
-        # Automatically calculate end_time based on service duration
+    def save(self, *args, **kwargs): 
         if self.service and self.start_time:
             start_datetime = datetime.combine(datetime.today(), self.start_time)
             service_duration = timedelta(minutes=self.service.duration)
@@ -20,6 +19,7 @@ class AppointmentDetail(models.Model):
 
     def __str__(self):
         return f"Appointment Detail: {self.start_time} - {self.end_time}"
+ 
 
 class Appointment(models.Model):
     STATUS=(
@@ -36,4 +36,4 @@ class Appointment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-      return f"Appointment : {self.customer.first_name} {self.customer.last_name} {self.appointment_time.start_time} - {self.appointment_time.end_time}"
+      return f"Appointment : {self.customer.first_name} {self.customer.last_name} {self.appointment_detail.start_time} - {self.appointment_detail.end_time}"
